@@ -13,8 +13,8 @@ interface FormFieldProps<T extends FieldValues> {
 
 const FormField = ( { control, name, label, placeholder, type="text" } : FormFieldProps<T>) => (
   <Controller 
-    name={name}
     control={control}
+    name={name}
     render={({ field }) => (
       <FormItem>
           <FormLabel className="label">{label}</FormLabel>
