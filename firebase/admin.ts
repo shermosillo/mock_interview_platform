@@ -4,7 +4,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 
 
 
-const initFirebaseAdmin = () => {
+function initFirebaseAdmin() {
     const apps = getApps();
 
     if(!apps.length) {
@@ -13,15 +13,15 @@ const initFirebaseAdmin = () => {
                 projectId: process.env.FIREBASE_PROJECT_ID,
                 clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
                 privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n")
-            })
-        })
+            }),
+        });
     }
 
 
-return {
-    auth: getAuth,
-    db: getFirestore()
-}
+    return {
+        auth: getAuth(),
+        db: getFirestore()
+    };
 }
 
 export const { auth, db } = initFirebaseAdmin();
