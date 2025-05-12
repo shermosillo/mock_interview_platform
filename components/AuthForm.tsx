@@ -60,15 +60,17 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
           return;
         }
 
-        toast. success('Account created successfully. Please sign in.');
+        toast.success('Account created successfully. Please sign in.');
           router.push('/sign-in');
       }
       else{
-        const {email, password } =values;
+        const {email, password } = values;
 
         const userCredentials = await signInWithEmailAndPassword(auth, email, password);
+        console.log(userCredentials); // Log the user credentials
 
         const idToken = await userCredentials.user.getIdToken();
+        console.log(idToken); // Log the idToken to see if it’s valid
 
         if(!idToken) {
           toast.error('Sign in Failed')
@@ -79,8 +81,8 @@ async function onSubmit(values: z.infer<typeof formSchema>) {
           email, idToken
         })
 
-        toast. success('Signed in successfully.');
-          router.push('/');
+        toast.success('Signed in successfully.');
+        router.push('/');
       }
   } catch (error) {
     console.log(error);
