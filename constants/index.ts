@@ -97,6 +97,195 @@ export const mappings = {
   "aws amplify": "amplify",
 };
 
+export const generator: CreateWorkflowDTO = {
+  "name": "Generate Interview",
+  "nodes": [
+    {
+      "name": "introduction",
+      "type": "conversation",
+      "isStart": true,
+      "metadata": {
+        "position": {
+          "x": -400,
+          "y": -100
+        }
+      },
+      "prompt": "Greet the user.  Inform them that you will get some information from them, to create a perfect interview.  Ask the caller for data required to extract.  Ask the questions one by one, and await an answer.",
+      "model": {
+        "model": "gpt-4o",
+        "provider": "openai",
+        "maxTokens": 1000,
+        "temperature": 0.7
+      },
+      "variableExtractionPlan": {
+        "output": [
+          {
+            "enum": [
+              "entry",
+              "mid",
+              "senior"
+            ],
+            "type": "string",
+            "title": "level",
+            "description": "The job experience level"
+          },
+          {
+            "enum": [],
+            "type": "number",
+            "title": "amount",
+            "description": "How many questions would you like to generate?"
+          },
+          {
+            "enum": [],
+            "type": "string",
+            "title": "techstack",
+            "description": "A list of technologies to cover during the job interview.  For example, React, Next.js, Node and so on ..."
+          },
+          {
+            "enum": [],
+            "type": "string",
+            "title": "role",
+            "description": "What role would you like to train for?  For example, Frontend, Backend, Fullstack, Design, UX?"
+          },
+          {
+            "enum": [
+              "behavioral",
+              "technical",
+              "mixed"
+            ],
+            "type": "string",
+            "title": "type",
+            "description": "What type of interview should it be?"
+          }
+        ]
+      },
+      "messagePlan": {
+        "firstMessage": ""
+      }
+    },
+    {
+      "name": "API Request",
+      "type": "tool",
+      "metadata": {
+        "position": {
+          "x": -400,
+          "y": 150
+        }
+      },
+      "tool": {
+        "url": "https://mock-interview-platform-blond.vercel.app/api/vapi/generate",
+        "body": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "role": {
+              "type": "string",
+              "value": "{{ role }}",
+              "description": ""
+            },
+            "type": {
+              "type": "string",
+              "value": "{{ type }}",
+              "description": ""
+            },
+            "level": {
+              "type": "string",
+              "value": "{{ level }}",
+              "description": ""
+            },
+            "amount": {
+              "type": "number",
+              "value": "{{ amount }}",
+              "description": ""
+            },
+            "userid": {
+              "type": "string",
+              "value": "{{ userid }}",
+              "description": ""
+            },
+            "techstack": {
+              "type": "string",
+              "value": "{{ techstack }}",
+              "description": ""
+            }
+          }
+        },
+        "name": "getUserData",
+        "type": "apiRequest",
+        "method": "POST",
+        "function": {
+          "name": "untitled_tool",
+          "parameters": {
+            "type": "object",
+            "required": [],
+            "properties": {}
+          }
+        },
+        "messages": [
+          {
+            "type": "request-start",
+            "content": "Please hold on. I'm sending a request to the app.",
+            "blocking": true
+          },
+          {
+            "role": "assistant",
+            "type": "request-complete",
+            "content": "The request has been sent and your interview has been generated.  Thank you for the call! Bye!",
+            "endCallAfterSpokenEnabled": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "node_1748984858855",
+      "type": "tool",
+      "metadata": {
+        "position": {
+          "x": -397.3333333333333,
+          "y": 387
+        }
+      },
+      "tool": {
+        "type": "endCall",
+        "function": {
+          "name": "untitled_tool",
+          "parameters": {
+            "type": "object",
+            "required": [],
+            "properties": {}
+          }
+        },
+        "messages": [
+          {
+            "type": "request-start",
+            "content": "Everything has been generated.  I'll redirect you to the dashboard now, thanks for the call.",
+            "blocking": true
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "introduction",
+      "to": "API Request",
+      "condition": {
+        "type": "ai",
+        "prompt": "If user provided all the variables."
+      }
+    },
+    {
+      "from": "API Request",
+      "to": "node_1748984858855",
+      "condition": {
+        "type": "ai",
+        "prompt": ""
+      }
+    }
+  ],
+  "globalPrompt": "You are a voice assistant helping with creating new AI interviewers. Your task is to collect data from the user. Remember that this is a voice conversation - do not use any special characters."
+};
+
 export const interviewer: CreateAssistantDTO = {
   name: "Generate Interviewer",
   firstMessage:
