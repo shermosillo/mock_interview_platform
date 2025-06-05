@@ -159,9 +159,9 @@ export const generator: CreateWorkflowDTO = {
           }
         ]
       },
-      "messagePlan": {
-        "firstMessage": ""
-      }
+      // "messagePlan": {
+      //   "firstMessage": ""
+      // }
     },
     {
       "name": "API Request",
@@ -283,7 +283,7 @@ export const generator: CreateWorkflowDTO = {
       }
     }
   ],
-  "globalPrompt": "You are a voice assistant helping with creating new AI interviewers. Your task is to collect data from the user. Remember that this is a voice conversation - do not use any special characters."
+  // "globalPrompt": "You are a voice assistant helping with creating new AI interviewers. Your task is to collect data from the user. Remember that this is a voice conversation - do not use any special characters."
 };
 
 export const interviewer: CreateAssistantDTO = {
